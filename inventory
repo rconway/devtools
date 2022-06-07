@@ -1,0 +1,14 @@
+all:
+  hosts:
+  # vars:
+  #   ansible_user: devtools
+  children:
+    gitlab:
+      hosts:
+      children:
+        gitlab_masters:
+          hosts:
+            gitlab.rconway.uk
+        gitlab_runners:
+          hosts:
+            gitlab-runner-01.rconway.uk
