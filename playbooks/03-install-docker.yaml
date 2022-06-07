@@ -1,0 +1,56 @@
+---
+- name: Install docker
+  hosts: all
+  become: true
+  vars:
+    created_username: devtools
+  tasks:
+    - name: Install required system packages
+      apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: latest
+        update_cache: true
+
+    - name: Ensure docker services are enabled and started
+      service:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - docker
+        - containerd
+
+    - name: Ensure "docker" group exists
+      group:
+        name: docker
+        state: present
+
+    - name: Setup "{{ created_username }}" user for docker
+      user:
+        name: "{{ created_username }}"
+        groups: docker
+        append: true

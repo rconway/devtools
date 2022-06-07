@@ -1,0 +1,9 @@
+---
+- name: Ensure OS is up-to-date
+  hosts: all
+  become: true
+  tasks:
+    - name: Update cache and Upgrade all packages
+      apt:
+        upgrade: full
+        update_cache: true
