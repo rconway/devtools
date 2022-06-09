@@ -1,9 +1,10 @@
 ---
-- name: Create users
+- name: Setup users
   hosts: all
   become: true
-  vars:
-    created_username: devtools
+
+  vars_files:
+    - ../vars/users.yaml
 
   tasks:
     - name: Setup passwordless sudo
@@ -14,16 +15,16 @@
         line: "%sudo ALL=(ALL) NOPASSWD: ALL"
         validate: "/usr/sbin/visudo -cf %s"
 
-    - name: Create a new regular user ({{ created_username }}) with sudo privileges
+    - name: Create a new regular user ({{ normal_user.name }}) with sudo privileges
       user:
-        name: "{{ created_username }}"
+        name: "{{ normal_user.name }}"
         shell: "/bin/bash"
         groups: sudo
         append: true
 
     - name: Set authorized key for remote user
       ansible.posix.authorized_key:
-        user: "{{ created_username }}"
+        user: "{{ normal_user.name }}"
         state: present
         key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 

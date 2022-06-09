@@ -8,7 +8,9 @@ all:
       children:
         gitlab_masters:
           hosts:
-            gitlab.rconway.uk
+            gitlab.rconway.uk:
+              ansible_port: 8080
         gitlab_runners:
           hosts:
-            gitlab-runner-01.rconway.uk
+            gitlab-runner-[01:01].rconway.uk:
+              ansible_port: 22

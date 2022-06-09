@@ -2,8 +2,8 @@
 - name: Install docker
   hosts: all
   become: true
-  vars:
-    created_username: devtools
+  vars_files:
+    - ../vars/users.yaml
   tasks:
     - name: Install required system packages
       apt:
@@ -50,8 +50,8 @@
         name: docker
         state: present
 
-    - name: Setup "{{ created_username }}" user for docker
+    - name: Setup "{{ normal_user.name }}" user for docker
       user:
-        name: "{{ created_username }}"
+        name: "{{ normal_user.name }}"
         groups: docker
         append: true
