@@ -15,15 +15,15 @@
     timeout: "10"
   delegate_to: "localhost"
   ignore_errors: true
-  register: highport_ssh
+  register: inventory_ssh
 
 # If {{ ansible_port }} is reachable, we don't need to do anything special
 - name: SSH port is configured properly
   debug:
     msg: "SSH port is configured properly"
-  when: highport_ssh is defined and
-        highport_ssh.state is defined and
-        highport_ssh.state == "started"
+  when: inventory_ssh is defined and
+        inventory_ssh.state is defined and
+        inventory_ssh.state == "started"
   register: ssh_port_set
 
 # If unreachable on port {{ ansible_port }}, check if we're able to
@@ -38,8 +38,8 @@
   delegate_to: "localhost"
   ignore_errors: true
   register: default_ssh
-  when: highport_ssh is defined and
-        highport_ssh.failed
+  when: inventory_ssh is defined and
+        inventory_ssh.failed
 
 # If reachable, continue the following tasks with this port
 - name: Set inventory ansible_port to default
