@@ -44,8 +44,8 @@
     name: docker
     state: present
 
-- name: Setup "{{ normal_user.name }}" user for docker
+- name: Setup "{{ configured_user }}" user for docker
   user:
-    name: "{{ normal_user.name }}"
+    name: "{{ configured_user }}"
     groups: docker
     append: true
