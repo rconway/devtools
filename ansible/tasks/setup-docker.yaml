@@ -50,6 +50,5 @@
     groups: docker
     append: true
 
-# Reset connection so docker group is picked up.
-- name: Reset connection
+- name: Reset connection so docker group is picked up.
   meta: reset_connection
