@@ -1,0 +1,19 @@
+---
+- name: Base setup
+  hosts: gitlab_masters
+  become: true
+  gather_facts: false
+
+  handlers:
+    - import_tasks: ../handlers/restart-ssh.yaml
+
+  tasks:
+    - import_tasks: ../tasks/record-configured-facts.yaml
+    - import_tasks: ../tasks/set-ansible-user-root.yaml
+    - import_tasks: ../tasks/setup-ssh-port.yaml
+    - import_tasks: ../tasks/setup-users.yaml
+    - import_tasks: ../tasks/set-ansible-user-configured.yaml
+    - import_tasks: ../tasks/secure-ssh.yaml
+    - import_tasks: ../tasks/update-os.yaml
+    - import_tasks: ../tasks/set-hostname.yaml
+    - import_tasks: ../tasks/setup-docker.yaml

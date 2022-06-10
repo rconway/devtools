@@ -1,0 +1,50 @@
+---
+# GITLAB_HOME directory
+- name: Set path to the Gitlab HOME directory
+  set_fact:
+    gitlab_home: "{{ ansible_env.HOME }}/gitlab"
+- name: Ensure the Gitlab HOME directory ({{ gitlab_home }}) exists
+  file:
+    path: "{{ gitlab_home }}"
+    state: directory
+
+# Ensure pip is installed
+- name: Update apt and install pip
+  apt:
+    pkg:
+      - python3-pip
+    state: latest
+    update_cache: true
+  become: true
+
+# Docker SDK for Python
+- name: Ensure Docker SDK for Python is installed
+  pip:
+    name:
+      - docker
+      - docker-compose
+
+# Docker-compose
+- name: Run docker-compose for Gitlab Master
+  docker_compose:
+    project_name: gitlab-master
+    definition:
+      version: '3.6'
+      services:
+        gitlab:
+          image: 'gitlab/gitlab-ee:latest'
+          restart: always
+          hostname: "{{ ansible_hostname }}"
+          environment:
+            GITLAB_OMNIBUS_CONFIG: |
+              external_url "https://{{ ansible_hostname  }}"
+              # Add any other gitlab.rb configuration here, each on its own line
+          ports:
+            - '80:80'
+            - '443:443'
+            - '22:22'
+          volumes:
+            - "{{ gitlab_home }}/config:/etc/gitlab"
+            - "{{ gitlab_home }}/logs:/var/log/gitlab"
+            - "{{ gitlab_home }}/data:/var/opt/gitlab"
+          shm_size: '256m'
