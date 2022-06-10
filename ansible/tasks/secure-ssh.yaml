@@ -1,0 +1,13 @@
+---
+- name: Disable password authentication for root
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin prohibit-password"
+  notify: "Restart sshd"
+
+# We notified "Restart sshd" if we modified the sshd config.
+# By calling flush_handlers, we make sure the handler is run *right now*
+- name: Ensure SSH is reloaded if need be
+  meta: flush_handlers

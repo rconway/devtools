@@ -1,0 +1,14 @@
+---
+- name: SSH
+  hosts: all
+  become: true
+  gather_facts: false
+
+  vars_files:
+    - ../vars/users.yaml
+
+  handlers:
+    - import_tasks: ../handlers/restart-ssh.yaml
+
+  tasks:
+    - import_tasks: ../tasks/setup-ssh-port.yaml

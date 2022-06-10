@@ -1,0 +1,5 @@
+---
+- name: Update cache and Upgrade all packages
+  apt:
+    upgrade: full
+    update_cache: true
