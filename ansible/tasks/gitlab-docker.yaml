@@ -34,11 +34,12 @@
         gitlab:
           image: 'gitlab/gitlab-ee:latest'
           restart: always
-          hostname: "{{ ansible_hostname }}"
+          hostname: "{{ ansible_nodename }}"
           environment:
             GITLAB_OMNIBUS_CONFIG: |
-              external_url "https://{{ ansible_hostname  }}"
+              external_url "https://{{ ansible_nodename  }}"
               # Add any other gitlab.rb configuration here, each on its own line
+            GITLAB_ROOT_PASSWORD: "{{ initial_root_password }}"
           ports:
             - '80:80'
             - '443:443'

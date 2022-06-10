@@ -5,5 +5,8 @@
 - name: Gitlab MASTER setup
   hosts: gitlab_masters
 
+  vars_files:
+    - ../vars/gitlab-secrets.yaml
+
   tasks:
     - import_tasks: ../tasks/gitlab-docker.yaml
