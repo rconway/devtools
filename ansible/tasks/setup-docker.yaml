@@ -49,3 +49,7 @@
     name: "{{ configured_user }}"
     groups: docker
     append: true
+
+# Reset connection so docker group is picked up.
+- name: Reset connection
+  meta: reset_connection
