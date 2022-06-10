@@ -10,7 +10,9 @@ all:
           hosts:
             gitlab.rconway.uk:
               ansible_port: 8080
+              ansible_user: devtools
         gitlab_runners:
           hosts:
             gitlab-runner-[01:01].rconway.uk:
               ansible_port: 22
+              ansible_user: devtools

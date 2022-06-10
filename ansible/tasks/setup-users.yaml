@@ -7,15 +7,15 @@
     line: "%sudo ALL=(ALL) NOPASSWD: ALL"
     validate: "/usr/sbin/visudo -cf %s"
 
-- name: Create a new regular user ({{ normal_user.name }}) with sudo privileges
+- name: Create a new regular user ({{ configured_user }}) with sudo privileges
   user:
-    name: "{{ normal_user.name }}"
+    name: "{{ configured_user }}"
     shell: "/bin/bash"
     groups: sudo
     append: true
 
 - name: Set authorized key for remote user
   ansible.posix.authorized_key:
-    user: "{{ normal_user.name }}"
+    user: "{{ configured_user }}"
     state: present
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

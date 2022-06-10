@@ -1,0 +1,10 @@
+---
+# ansible_port can change throughout this role, keep a copy around
+- name: Set configured port fact
+  set_fact:
+    configured_port: "{{ ansible_port }}"
+
+# ansible_user can change throughout this role, keep a copy around
+- name: Set configured user fact
+  set_fact:
+    configured_user: "{{ ansible_user }}"

@@ -1,0 +1,4 @@
+---
+- name: Set 'root' as the ansible_user
+  set_fact:
+    ansible_user: "root"

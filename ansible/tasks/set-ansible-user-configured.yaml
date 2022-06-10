@@ -1,0 +1,4 @@
+---
+- name: Set the inventory user as the ansible_user
+  set_fact:
+    ansible_user: "{{ configured_user }}"
