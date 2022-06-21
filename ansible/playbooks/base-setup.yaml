@@ -1,6 +1,6 @@
 ---
 - name: Base setup
-  hosts: gitlab_masters
+  hosts: all
   become: true
   gather_facts: false
 
