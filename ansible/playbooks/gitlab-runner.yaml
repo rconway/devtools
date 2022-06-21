@@ -2,11 +2,11 @@
 - name: Base setup
   import_playbook: base-setup.yaml
 
-# - name: Gitlab RUNNER setup
-#   hosts: gitlab_runners
+- name: Gitlab RUNNER setup
+  hosts: gitlab_runners
 
-#   vars_files:
-#     - ../vars/gitlab-secrets.yaml
+  vars_files:
+    - ../vars/gitlab-secrets.yaml
 
-#   tasks:
-#     - import_tasks: ../tasks/gitlab-runner-docker.yaml
+  tasks:
+    - import_tasks: ../tasks/gitlab-runner-docker.yaml

@@ -1,0 +1,90 @@
+---
+# GITLAB_RUNNER_HOME directory
+- name: Set path to the Gitlab Runner HOME directory
+  set_fact:
+    gitlab_runner_home: "{{ ansible_env.HOME }}/gitlab-runner"
+- name: Ensure the Gitlab Runner HOME directory ({{ gitlab_runner_home }}) exists
+  file:
+    path: "{{ gitlab_runner_home }}"
+    state: directory
+
+# Ensure the Gitlab Runner config directory exists
+- name: Ensure the Gitlab Runner config directory exists
+  ansible.builtin.file:
+    path: "{{ gitlab_runner_home }}/config"
+    state: directory
+
+# Ensure the Gitlab Runner config.toml file exists
+- name: Ensure the Gitlab Runner config.toml file exists
+  ansible.builtin.file:
+    path: "{{ gitlab_runner_home }}/config/config.toml"
+    state: touch
+
+# Ensure the Gitlab Runner config.toml is initialised
+- name: Ensure the Gitlab Runner config.toml is initialised
+  lineinfile:
+    path: "{{ gitlab_runner_home }}/config/config.toml"
+    state: present
+    regexp: "^#?concurrent"
+    line: "concurrent = 10"
+
+# Ensure pip is installed
+- name: Update apt and ensure pip is installed
+  apt:
+    pkg:
+      - python3-pip
+    state: latest
+    update_cache: true
+  become: true
+
+# Ensure Docker SDK for Python is installed
+- name: Ensure Docker SDK for Python is installed
+  pip:
+    name:
+      - docker
+      - docker-compose
+
+# Ensure Gitlab Runner service is running
+- name: Ensure Gitlab Runner service is running (docker-compose)
+  docker_compose:
+    project_name: gitlab-runner
+    definition:
+      version: '3.6'
+      services:
+        gitlab-runner:
+          image: 'gitlab/gitlab-runner:latest'
+          restart: always
+          hostname: "{{ ansible_nodename }}"
+          volumes:
+            - "{{ gitlab_runner_home }}/config:/etc/gitlab-runner"
+            - "/var/run/docker.sock:/var/run/docker.sock"
+          shm_size: '256m'
+
+# Check if runner is registered
+- name: Check if runner is registered
+  shell: |
+    docker run --rm -it \
+      -v {{ gitlab_runner_home }}/config:/etc/gitlab-runner \
+      gitlab/gitlab-runner list \
+    | grep '^docker-runner'
+  changed_when: False
+  failed_when: False
+  register: runner_list
+
+# Ensure Gitlab runner is registered
+- name: Ensure Gitlab runner is registered
+  shell: |
+    docker run --rm -it \
+      -v {{ gitlab_runner_home }}/config:/etc/gitlab-runner \
+      gitlab/gitlab-runner register \
+      --non-interactive \
+      --url "{{ gitlab_url }}" \
+      --registration-token "{{ gitlab_runner_registration_token }}" \
+      --executor "docker" \
+      --docker-image "alpine:latest" \
+      --description "docker-runner" \
+      --tag-list "docker" \
+      --run-untagged="true" \
+      --locked="false" \
+      --access-level="not_protected"
+  when: runner_list.rc != 0

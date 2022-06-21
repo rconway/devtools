@@ -5,6 +5,8 @@ all:
   children:
     gitlab:
       hosts:
+      vars:
+        gitlab_url: https://gitlab.rconway.uk/
       children:
         gitlab_masters:
           hosts:
