@@ -1,6 +1,0 @@
----
-- name: Ensure OS is up-to-date
-  hosts: all
-  become: true
-  tasks:
-    - import_tasks: ../tasks/update-os.yaml
