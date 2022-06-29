@@ -1,10 +1,17 @@
 # devtools
 
+- [devtools](#devtools)
+  - [Playbooks](#playbooks)
+    - [Gitlab Master](#gitlab-master)
+    - [Gitlab Runners](#gitlab-runners)
+  - [Inventory](#inventory)
+  - [Ansible Vault](#ansible-vault)
+
 ## Playbooks
 
 Before running these playbooks ensure that the [inventory](#inventory) is properly maintained, and that the [ansible vault prerequisites](#ansible-vault) have been met.
 
-## Gitlab Master
+### Gitlab Master
 
 Gitlab masters (as described in the [inventory](#inventory)) are provisioned with...
 
@@ -12,7 +19,7 @@ Gitlab masters (as described in the [inventory](#inventory)) are provisioned wit
 ansible-playbook -l gitlab_masters ./ansible/playbooks/gitlab-master.yaml
 ```
 
-## Gitlab Runners
+### Gitlab Runners
 
 Gitlab runners (as described in the [inventory](#inventory)) are provisioned with...
 
